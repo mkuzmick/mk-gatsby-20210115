@@ -3,7 +3,7 @@
 ## THE STEPS
 to create this
 
-### START A BLANK PROJECT
+### START THE PROJECT AND REPO
 
 * we now have the initial build and github repo going with a script like so
     ```
@@ -22,6 +22,19 @@ to create this
     open -a "Firefox Developer Edition" "http://localhost:8000/___graphql"
     gatsby develop
     ```
+* it should be running. If you want, host it on Netlify.
+* also add new metadata to `gatsby-config.js`:
+    ```
+    siteMetadata: {
+        title: `MK Gatsby 20210115`,
+        description: `Another daily Gatsby project.`,
+        author: `mk`,
+      },
+    ```
+
+
+### INSTALL MARKDOWN AND MDX PLUGINS
+
 * install all the markdown and mdx plugins: [gatsby-transformer-remark](https://www.gatsbyjs.com/plugins/gatsby-transformer-remark/?=gatsby%20transformer%20remark), [gatsby-remark-images](https://www.gatsbyjs.com/plugins/gatsby-remark-images/?=remark%20images) and [gatsby-plugin-mdx](https://www.gatsbyjs.com/plugins/gatsby-plugin-mdx/?=mdx):
     ```
     npm install gatsby-transformer-remark gatsby-remark-images gatsby-plugin-sharp gatsby-plugin-mdx @mdx-js/mdx @mdx-js/react
@@ -34,7 +47,7 @@ to create this
       options: {
         plugins: [
           {
-            resolve: `gatsby-remark-images`,
+            resolve: `gatsby-remark-images`,v
             options: {
               maxWidth: 960,
             },
@@ -83,35 +96,10 @@ to create this
     },
     ```
 
-* create the content folders (moving images from `src/images` to `content/images`) and initial files (if you don't want to just use the `src/pages` folder for all your mdx)
-    ```
-    mkdir content content/resources
-    mv src/images content/images
-    curl -o content/images/gatsby.jpg "https://i.guim.co.uk/img/media/cc5ff87a032ce6e4144e63a2a1cbe476dbc7cd5a/273_0_3253_1952/master/3253.jpg?width=620&quality=45&auto=format&fit=max&dpr=2&s=d8da5fd430d3983dc50543a44b3979d4"
-    echo "# MDX RESOURCE\ncontent goes here\n\![Gatsby](../images/gatsby.jpg)" > content/resources/sample-resource.mdx
-    echo "# MDX PAGE\ncontent goes here\n\![Gatsby](../../content/images/gatsby.jpg)" > src/pages/sample-mdx-page.mdx
-    ```
-* then in the `gatsby-config.js` let's connect the `gatsby-source-filesystem` plugin to these new folders for mdx posts and images. We'll delete or modify the current `gatsby-source-filesystem` element, and instead have these two:
-    ```
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        name: `resources`,
-        path: `${__dirname}/content/resources`,
-      },
-    },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        name: `images`,
-        path: `${__dirname}/content/images`,
-      },
-    },
-    ```
-* don't forget to ensure that there's a correct path to the icon (either a new icon or the one gatsby provided, which has been moved):
-    ```
-    icon: `content/images/gatsby-icon.png`,
-    ```
+
+
+### ADD STYLES WITH EMOTION
+
 * then install emotion
     ```
     npm i gatsby-plugin-emotion @emotion/core @emotion/react
@@ -162,6 +150,72 @@ to create this
         }
 
     export default Page3;
+    ```
+
+### OR ADD STYLES WITH THEME-UI
+
+* install [gatsby-plugin-theme-ui](https://www.gatsbyjs.com/plugins/gatsby-plugin-theme-ui/?=theme-ui) . one option =
+    ```
+    npm i theme-ui gatsby-plugin-theme-ui @theme-ui/presets
+    ```
+    
+* then add it to `gatsby-config.js`
+    ```
+    plugins: ['gatsby-plugin-theme-ui'],
+    ```
+    or
+
+    ```
+    {
+      resolve: `gatsby-plugin-theme-ui`,
+      options: {
+        preset: "@theme-ui/preset-tailwind",
+      },
+    },
+    ```
+* make the shadow dir
+```
+mkdir src/gatsby-plugin-theme-ui
+```
+and add index
+```
+echo "export default {}" > src/gatsby-plugin-theme-ui/index.js
+```
+
+
+
+
+
+### CREATE CONTENT FOLDERS AND PAGES FROM THEM
+
+* create the content folders (moving images from `src/images` to `content/images`) and initial files (if you don't want to just use the `src/pages` folder for all your mdx)
+    ```
+    mkdir content content/resources
+    mv src/images content/images
+    curl -o content/images/gatsby.jpg "https://i.guim.co.uk/img/media/cc5ff87a032ce6e4144e63a2a1cbe476dbc7cd5a/273_0_3253_1952/master/3253.jpg?width=620&quality=45&auto=format&fit=max&dpr=2&s=d8da5fd430d3983dc50543a44b3979d4"
+    echo "# MDX RESOURCE\ncontent goes here\n\![Gatsby](../images/gatsby.jpg)" > content/resources/sample-resource.mdx
+    echo "# MDX PAGE\ncontent goes here\n\![Gatsby](../../content/images/gatsby.jpg)" > src/pages/sample-mdx-page.mdx
+    ```
+* then in the `gatsby-config.js` let's connect the `gatsby-source-filesystem` plugin to these new folders for mdx posts and images. We'll delete or modify the current `gatsby-source-filesystem` element, and instead have these two:
+    ```
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `resources`,
+        path: `${__dirname}/content/resources`,
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `images`,
+        path: `${__dirname}/content/images`,
+      },
+    },
+    ```
+* don't forget to ensure that there's a correct path to the icon (either a new icon or the one gatsby provided, which has been moved):
+    ```
+    icon: `content/images/gatsby-icon.png`,
     ```
 
 * create pages for md and mdx in the `content` folder.
@@ -218,18 +272,13 @@ to create this
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 ---
+
+
+## NEXT
+
+* [creating multiple different types of pages in gatsby-node.js](https://swas.io/blog/using-multiple-queries-on-gatsbyjs-createpages-node-api/)
+* 
 
 
 ### NOTES
@@ -319,40 +368,9 @@ the above is basically the most solid step by step log I have. Tomorrow let's st
 * connect to Airtable
 * write a "color contrast" resource with that Gatsby shot and some waveform and vectorscope images
 * make that the starter resource
+* try embedding https://www.iso-ne.com/
 
-### THEME UI FOR LATER
 
-* install [gatsby-plugin-theme-ui](https://www.gatsbyjs.com/plugins/gatsby-plugin-theme-ui/?=theme-ui) 
-    ```
-    npm i theme-ui gatsby-plugin-theme-ui @theme-ui/presets
-    ```
-    or just tailwind with
-
-    ```
-    npm i @theme-ui/preset-tailwind
-    ```
-* then add it to `gatsby-config.js`
-    ```
-    plugins: ['gatsby-plugin-theme-ui'],
-    ```
-    or
-
-    ```
-    {
-      resolve: `gatsby-plugin-theme-ui`,
-      options: {
-        preset: "@theme-ui/preset-tailwind",
-      },
-    },
-    ```
-* make the shadow dir
-```
-mkdir src/gatsby-plugin-theme-ui
-```
-and add index
-```
-echo "export default {}" > src/gatsby-plugin-theme-ui/index.js
-```
 
 
 ## LINKS
@@ -363,8 +381,3 @@ echo "export default {}" > src/gatsby-plugin-theme-ui/index.js
 
 
 
-
-## NEXT
-
-* [creating multiple different types of pages in gatsby-node.js](https://swas.io/blog/using-multiple-queries-on-gatsbyjs-createpages-node-api/)
-* 
